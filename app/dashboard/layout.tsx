@@ -10,8 +10,8 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full overflow-x-hidden">
-        <DashboardSidebar  />
-        <main className="flex-1">{children}</main>
+        <DashboardSidebar />
+        <main className="flex-1 w-full">{children}</main>
       </div>
     </SidebarProvider>
   );
