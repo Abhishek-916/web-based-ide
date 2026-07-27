@@ -35,10 +35,30 @@ import {
 import Image from "next/image";
 
 const mockPlaygrounds = [
-  { id: "react-playground", name: "React Playground", starred: true, icon: Zap },
-  { id: "vue-playground", name: "Vue Playground", starred: false, icon: Compass },
-  { id: "angular-playground", name: "Angular Playground", starred: false, icon: Terminal },
-  { id: "svelte-playground", name: "Svelte Playground", starred: true, icon: Lightbulb },
+  {
+    id: "react-playground",
+    name: "React Playground",
+    starred: true,
+    icon: Zap,
+  },
+  {
+    id: "vue-playground",
+    name: "Vue Playground",
+    starred: false,
+    icon: Compass,
+  },
+  {
+    id: "angular-playground",
+    name: "Angular Playground",
+    starred: false,
+    icon: Terminal,
+  },
+  {
+    id: "svelte-playground",
+    name: "Svelte Playground",
+    starred: true,
+    icon: Lightbulb,
+  },
 ];
 
 export function DashboardSidebar() {
@@ -47,10 +67,15 @@ export function DashboardSidebar() {
   const [starredPlaygrounds] = useState(
     mockPlaygrounds.filter((p) => p.starred)
   );
+
   const [recentPlaygrounds] = useState(mockPlaygrounds);
 
   return (
-    <Sidebar variant="inset" collapsible="icon" className="border-1 border-r">
+    <Sidebar
+      variant="inset"
+      collapsible="icon"
+      className="border-1 border-r"
+    >
       <SidebarHeader>
         <div className="flex items-center gap-2 px-4 py-3 justify-center">
           <Image src="/logo.svg" alt="logo" height={60} width={60} />
