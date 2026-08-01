@@ -5,17 +5,21 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   BookOpen,
+  Code2,
   Compass,
   FolderPlus,
   History,
   Home,
   LayoutDashboard,
   Lightbulb,
+  type LucideIcon,
   Plus,
   Settings,
   Star,
   Terminal,
   Zap,
+  Database,
+  FlameIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,41 +38,35 @@ import {
 } from "@/components/ui/sidebar";
 import Image from "next/image";
 
-const mockPlaygrounds = [
-  {
-    id: "react-playground",
-    name: "React Playground",
-    starred: true,
-    icon: Zap,
-  },
-  {
-    id: "vue-playground",
-    name: "Vue Playground",
-    starred: false,
-    icon: Compass,
-  },
-  {
-    id: "angular-playground",
-    name: "Angular Playground",
-    starred: false,
-    icon: Terminal,
-  },
-  {
-    id: "svelte-playground",
-    name: "Svelte Playground",
-    starred: true,
-    icon: Lightbulb,
-  },
-];
+interface PlaygroundData {
+  id: string;
+  name: string;
+  icon: string;
+  starred: boolean;
+}
 
-export function DashboardSidebar() {
+const lucideIconMap: Record<string, LucideIcon> = {
+  Zap,
+  Lightbulb,
+  Database,
+  Compass,
+  FlameIcon,
+  Terminal,
+  Code2,
+};
+
+export function DashboardSidebar({
+  initialPlaygroundData,
+}: {
+  initialPlaygroundData: PlaygroundData[];
+}) {
   const pathname = usePathname();
 
   const [starredPlaygrounds] = useState(
-    mockPlaygrounds.filter((p) => p.starred)
+    initialPlaygroundData.filter((p) => p.starred)
   );
 
-  const [recentPlaygrounds] = useState(mockPlaygrounds);
+  const [recentPlaygrounds] = useState(initialPlaygroundData);
 
   return (
     <Sidebar
@@ -156,20 +154,34 @@ export function DashboardSidebar() {
 
           <SidebarGroupContent>
             <SidebarMenu>
-              {starredPlaygrounds.map((playground) => (
-                <SidebarMenuItem key={playground.id}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === `/playground/${playground.id}`}
-                    tooltip={playground.name}
-                  >
-                    <Link href={`/playground/${playground.id}`}>
-                      <playground.icon className="h-4 w-4" />
-                      <span>{playground.name}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {starredPlaygrounds.length === 0 &&
+              recentPlaygrounds.length === 0 ? (
+                <div className="text-center text-muted-foreground py-4 w-full">
+                  Create your playground
+                </div>
+              ) : (
+                starredPlaygrounds.map((playground) => {
+                  const IconComponent =
+                    lucideIconMap[playground.icon] || Code2;
+
+                  return (
+                    <SidebarMenuItem key={playground.id}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={
+                          pathname === `/playground/${playground.id}`
+                        }
+                        tooltip={playground.name}
+                      >
+                        <Link href={`/playground/${playground.id}`}>
+                          <IconComponent className="h-4 w-4" />
+                          <span>{playground.name}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -186,20 +198,28 @@ export function DashboardSidebar() {
 
           <SidebarGroupContent>
             <SidebarMenu>
-              {recentPlaygrounds.map((playground) => (
-                <SidebarMenuItem key={playground.id}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === `/playground/${playground.id}`}
-                    tooltip={playground.name}
-                  >
-                    <Link href={`/playground/${playground.id}`}>
-                      <playground.icon className="h-4 w-4" />
-                      <span>{playground.name}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {recentPlaygrounds.length > 0 &&
+                recentPlaygrounds.map((playground) => {
+                  const IconComponent =
+                    lucideIconMap[playground.icon] || Code2;
+
+                  return (
+                    <SidebarMenuItem key={playground.id}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={
+                          pathname === `/playground/${playground.id}`
+                        }
+                        tooltip={playground.name}
+                      >
+                        <Link href={`/playground/${playground.id}`}>
+                          <IconComponent className="h-4 w-4" />
+                          <span>{playground.name}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
 
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="View all">
